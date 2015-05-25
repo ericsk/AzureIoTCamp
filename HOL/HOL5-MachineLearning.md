@@ -7,7 +7,7 @@
 
 # 1. 建立 Azure 機器學習工作區 #
 
-所需時間: **3 分鐘**
+所需時間: **2 分鐘**
 
 在 [Microsoft Azure 的管理後台](https://manage.windowsazure.com/)，點擊左下角的_「+ 新增」_，選擇_「資料服務」_ » _「機器學習」_ ，選擇**快速建立**，然後填入**工作區名稱**、**擁有者**以及**儲存體帳戶**。儲存體帳戶在這裡是用來儲存機器學習時所需要或儲存後的資料。
 
@@ -19,7 +19,7 @@
 
 # 2. 進入 ML Studio #
 
-所需時間: **3 分鐘**
+所需時間: **2 分鐘**
 
 建立好 Azure 機器學習工作區後，就可以在管理後台中，進入剛才建立的機器學習工作區，然後按照連結進入 ML Studio 中進行機器學習的操作。
 
@@ -94,3 +94,24 @@
 
 # 4. 將訓練模型發佈成 Web Service #
 
+所需時間：**6 分鐘**
+
+1.  在 ML Studio 的實驗室中，在實驗已經跑完的狀態下，從左側面板的 **Web Service** 中拉出 **Input** 及 **Output** 的區塊，然後將 **Input** 接在 _Score Model_ 的右側資料輸入的位置，然後 **Output** 接在 _Score Model_ 的輸出位置。
+
+    ![加入 Web Service 的輸入及輸出](images/5-adding-webservice-input-output.png)
+
+2.  接好 Web Service 的 Input 及 Output 之後，重新跑一次實驗，然後再按下下方工作列的 **PUBLISH WEB SERVICE** 按鈕將這個訓練好的模型做成 web service。
+
+    ![發佈 Web Service](images/5-publish-web-service.png)
+
+3.  發佈完成後就有一個 API 的說明頁面，包含了 **API Key** 以及測試 API 的小工具或 Excel Workbook。
+
+    ![Web Service 的 API 頁面](images/5-published-web-service-page.png)
+
+4.  按下 **Test** 按鈕，可以輸入一些測試資料來看看這個模型能預測出什麼價格，比方說可以輸入 toyota,hatchback,102.4,122,92,4200,32 看看它預測出來的價格離 11248 多遠。
+
+    ![測試 API](images/5-test-web-service.png)
+
+5.  按下 **REQUEST/RESPONSE** 的連結就會導向詳細的 API 說明頁面，包含呼叫的網址、參數以及範例程式碼，透過這一頁的說明，就可以很容易地將訓練好的模型透過 Web Service 的方式整合。
+
+    ![API 說明頁面](images/5-api-help-page.png)
