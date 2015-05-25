@@ -66,6 +66,70 @@ Event Hubs 是 [Azure Service Bus](http://azure.microsoft.com/zh-tw/services/ser
 
 所需時間: **10 分鐘**
 
+1.  開啟 Visual Studio，按下_「新增專案」_，從範本中選擇 _Visual C#_ » _Windows_ » _Windows 桌面_ ，建立一個 **主控台應用程式（Console Application）**，名稱可以取作 **EventHubSender**。
+
+    ![建立 Console App 專案](images/1-create-eventhub-sender-project.png)
+
+2.  接下來準備安裝 Azure Service Bus SDK 來存取 Event Hubs，在專案上按右鍵，選擇**管理 NuGet 套件...**。
+
+    ![透過 NuGet 安裝 Azure Service Bus SDK](images/1-manage-nuget-pkg.png)
+
+3.  在 NuGet 套件管理員中，搜尋 _Azure Service Bus_ 找到官方發行的 SDK 後安裝。
+
+    ![安裝 Azure Service Bus SDK](images/1-install-azure-service-bus-sdk.png)
+
+4.  將下列程式碼貼到 **Program.cs** 檔案中，貼上後，記得將 ```eventHubName``` 的數值修改為您前面設定的 Event Hub 名稱（不是 Service Bus 的名稱），而 ```connectionString``` 修改為前述設定存取原則時，傳送訊息原則的連接字串：
+
+	```csharp
+	using System;
+	using System.Text;
+	using System.Threading.Tasks;
+	using Microsoft.ServiceBus.Messaging;
+
+	namespace EventHubSender
+	{
+	  class Program
+	  {
+	    static string eventHubName = "你的事件中樞名稱";
+	    static string connectionString = "你的連接字串";
+
+	    static void Main(string[] args)
+	    {
+	      Console.WriteLine("按下 Ctrl-C 來停止傳送訊息");
+	      Console.WriteLine("按下 Enter 鍵後開始傳送訊息");
+	      Console.ReadLine();
+	      SendingRandomMessages().Wait();
+	    }
+
+	    static async Task SendingRandomMessages()
+	    {
+	      var eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, eventHubName);
+	      while (true)
+	      {
+	        var guid = Guid.NewGuid().ToString();
+	        var time = DateTime.Now.ToString();
+	        var message = "{\"id\":\""+guid+"\", \"time\":\""+time+"\"}";
+
+	        try
+	        {
+	          Console.WriteLine("{0} > 傳送訊息:{1}", time, message);
+	          await eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(message)));
+	        }
+	        catch (Exception exception)
+	        {
+	          Console.ForegroundColor = ConsoleColor.Red;
+	          Console.WriteLine("{0} > 例外狀況:{1}", time, exception.Message);
+	          Console.ResetColor();
+	        }
+
+	        await Task.Delay(200);
+	      }
+	    }
+	  }
+	}
+	```
+5.  這個程式執行後，按下 Enter 就會開始不斷送出訊息（真正送訊息的是 ```await eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(message)));``` 這一段），直到您按下 Ctrl+C 後才會停止送訊息到 Azure Event Hubs 上。
+
 # 5. 從 Event Hubs 中取出訊息
 
 所需時間: **10 分鐘**
