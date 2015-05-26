@@ -7,8 +7,8 @@ namespace EventHubSender
 {
   class Program
   {
-    static string eventHubName = "iotlab";
-    static string connectionString = "Endpoint=sb://azureiotlab-ns.servicebus.windows.net/;SharedAccessKeyName=SendPolicy;SharedAccessKey=NHUpR3ZMakCWj7rQMPwEWZGycU4k2TSkfENNTTA83hU=";
+    static string eventHubName = "{YOUR_EVENT_HUB_NAME}";
+    static string connectionString = "{YOUR_SENDER_CONNECTION_STRING}";
 
     static void Main(string[] args)
     {
