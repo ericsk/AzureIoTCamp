@@ -137,3 +137,104 @@ Event Hubs 是 [Azure Service Bus](http://azure.microsoft.com/zh-tw/services/ser
 
 所需時間: **10 分鐘**
 
+1.  開啟 Visual Studio，按下_「新增專案」_，從範本中選擇 _Visual C#_ » _Windows_ » _Windows 桌面_ ，建立一個 **主控台應用程式（Console Application）**，名稱可以取作 **EventHubReceiver**。
+
+    ![建立 EventHubReceiver 專案](images/1-create-event-hub-receiver-project.png)
+
+2.  接下來準備安裝 Azure Service Bus SDK 來存取 Event Hubs，在專案上按右鍵，選擇**管理 NuGet 套件...**。
+
+    ![透過 NuGet 安裝 Azure Service Bus SDK](images/1-manage-nuget-pkg.png)
+
+3.  在 NuGet 套件管理員中，搜尋 _Azure Service Bus Event Hub EventProcessorHost_ 找到官方發行的 SDK 後安裝。
+
+    ![安裝 Azure Service Bus SDK](images/1-install-azure-service-bus-event-hub-event-processor-host.png)
+
+4.  在專案中右鍵新增類別，名稱為 **ReceiveProcessor.cs**。
+
+	![新增 ReceiveProcessor 類別](images/1-add-receiveprocessor-class.png)
+
+5.  將下列程式碼貼在 **ReceiveProcessor.cs** 檔案裡：
+
+	```csharp
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.Text;
+	using System.Threading.Tasks;
+	using Microsoft.ServiceBus.Messaging;
+
+	namespace EventHubReceiver
+	{
+	  class ReceiveProcessor : IEventProcessor
+	  {
+	    Stopwatch checkpointStopWatch;
+	
+	    async Task IEventProcessor.CloseAsync(PartitionContext context, CloseReason reason)
+	    {
+	      Console.WriteLine(string.Format("Processor Shuting Down.Partition '{0}', Reason:'{1}'.", context.Lease.PartitionId, reason.ToString()));
+	      if (reason == CloseReason.Shutdown)
+	      {
+	        await context.CheckpointAsync();
+	      }
+	    }
+	
+	    Task IEventProcessor.OpenAsync(PartitionContext context)
+	    {
+	      Console.WriteLine(string.Format("SimpleEventProcessor initialize.Partition:'{0}', Offset:'{1}'", context.Lease.PartitionId, context.Lease.Offset));
+	      this.checkpointStopWatch = new Stopwatch();
+	      this.checkpointStopWatch.Start();
+	      return Task.FromResult<object>(null);
+	    }
+	
+	    async Task IEventProcessor.ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)
+	    {
+	      foreach (EventData eventData in messages)
+	      {
+	        string data = Encoding.UTF8.GetString(eventData.GetBytes());
+	
+	        Console.WriteLine(string.Format("Message received.Partition:'{0}', Data:'{1}'",
+	            context.Lease.PartitionId, data));
+	      }
+	
+	      //Call checkpoint every 5 minutes, so that worker can resume processing from the 5 minutes back if it restarts.
+	      if (this.checkpointStopWatch.Elapsed > TimeSpan.FromMinutes(5))
+	      {
+	        await context.CheckpointAsync();
+	        this.checkpointStopWatch.Restart();
+	      }
+	    }
+	  }
+	}
+	```
+
+6.  回到 **Program.cs**，將下列程式碼貼入，這裡除了要填入事件中樞的名稱之外，也要使用有讀取訊息原則的連接字串，還要填入一個 Azure 儲存體的帳號資料用來存放操作的記錄檔，所以要到 Azure 上建立一個儲存體帳戶再取得存取金鑰填入
+
+	```csharp
+	using System;
+	using Microsoft.ServiceBus.Messaging;
+	
+	namespace EventHubReceiver
+	{
+	  class Program
+	  {
+	    static void Main(string[] args)
+	    {
+	      string eventHubConnectionString = "讀取原則的連接字串";
+	      string eventHubName = "事件中樞名稱";
+	      string storageAccountName = "儲存體帳戶名稱";
+	      string storageAccountKey = "儲存體存取金鑰";
+	      string storageConnectionString = string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}",
+	                  storageAccountName, storageAccountKey);
+	
+	      string eventProcessorHostName = Guid.NewGuid().ToString();
+	      EventProcessorHost eventProcessorHost = new EventProcessorHost(eventProcessorHostName, eventHubName, EventHubConsumerGroup.DefaultGroupName, eventHubConnectionString, storageConnectionString);
+	      eventProcessorHost.RegisterEventProcessorAsync<ReceiveProcessor>().Wait();
+	
+	      Console.WriteLine("Receiving.Press enter key to stop worker.");
+	      Console.ReadLine();
+	    }
+	  }
+	}
+	```
+
+7.  開始執行後，就可以看到這個程式會從 Event Hub 中取出訊息。
