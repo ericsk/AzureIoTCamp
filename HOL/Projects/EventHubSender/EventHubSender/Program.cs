@@ -21,11 +21,16 @@ namespace EventHubSender
     static async Task SendingRandomMessages()
     {
       var eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, eventHubName);
+
+      var random = new Random();
+
       while (true)
       {
         var guid = Guid.NewGuid().ToString();
         var time = DateTime.Now.ToString();
-        var message = "{\"id\":\""+guid+"\", \"time\":\""+time+"\"}";
+        var thermal = random.Next(195, 265) / 10.0 ;
+        var humidity = random.Next(58, 82);
+        var message = "{\"id\":\""+guid+"\", \"thermal\":"+thermal+", \"humidity\":"+humidity+", \"time\":\""+time+"\"}";
 
         try
         {
