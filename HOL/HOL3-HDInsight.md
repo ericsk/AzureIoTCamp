@@ -5,7 +5,8 @@
 事前準備：
 
   1. **擁有 Microsoft Azure 的訂閱帳戶並且能夠開通服務**。
-  2. 完成:
+  2. 至少有一個儲存體帳戶，可以參考[這份食譜](http://book.azure-recipes.tw/chapter04/01_create_storage_account.html)的步驟。
+  3. 完成:
     * [Hands-on Lab 1 - 使用 Azure Event Hubs](HOL1-EventHubs.md)
     * [Hands on Lab 2 - 使用 Azure Stream Analytics](HOL2-StreamAnalytics.md)
 
@@ -208,4 +209,52 @@ Azure HDInsight 是 Microsoft Azure 與 Horton Networks 公司合作將 Apache H
 
 # 5. 整合 Excel 中的 Power Query 做資料視覺化
 
-TBW
+在新版的 Excel 中可以安裝 Power Query 的插件來查詢並匯入許多不同資料來源的資料內容，其中也包含了 Hadoop 的 Hive 資料表，所以透過前面的步驟我們已經建立了 4 張 Hive 資料表，這裡就介紹如何將這些資料匯入 Excel 並且做出視覺化的呈現。
+
+1.  Excel 2016 已經內建 Power Query，若是 2010/2013 就另外下載安裝 [Power Query](https://www.microsoft.com/en-us/download/details.aspx?id=39379) 插件，選擇符合系統安裝的 Office 或 Excel 的語言及位元版本（32 位元或 64 位元）來安裝。
+
+2.  開啟 Excel 並從一個空白表格開始，在上方的 **Data** (Excel 2016) 或 **Power Query** (Excel 2013) 的 Tab 下選擇 **New Query** » **From Azure** » **From Azure HDInsight**。 
+
+    ![從 Azure HDInsight 查詢資料](images/3-powerquery-azure-hdinsight.png)
+
+3.  接著輸入儲存 Hive 資料表的儲存體帳號：
+
+	![從儲存體帳號](images/3-from-azure-hdinsight-storage.png)
+
+    然後輸入儲存體帳戶存取金鑰。
+
+	![輸入儲存體帳戶存取金鑰](images/3-storage-account-key.png)
+
+4.  輸入完儲存體帳戶資料後，雙擊儲存 Hive 資料表的容器（如：data），接著就會開啟一個查詢編輯器。
+
+	![PowerQuery 查詢編輯器](images/3-query-selector-editor.png)
+
+5.  選擇其中一個資料表，如：_averageReadingByMinute_，選擇下方的 _000000\_0_ 列，點擊左側 **Binary** 連結，查詢編輯器就會撈出這個資料表的資料。
+
+	![Hive 資料表的資料內容](images/3-query-data-from-hive-table.png)
+
+
+6.  把欄位的名稱分別修改為 _DeviceType_、_ReadingDateTime_、_RoomNumber_ 及 _Reading_。
+
+	![修改好的欄位名稱](images/3-modified-column-name.png)
+
+7.  接下來在查詢編輯器中按**關閉並讀取（Close & Load）**把資料載入 Excel 資料表中。
+
+	![將資料載入 Excel](images/3-load-data-into-excel.png)
+
+8.  在 Excel 上方**插入（Insert）**的頁籤中，點擊 **Power View** 的按鈕。
+
+	![插入 Power View](images/3-insert-power-view.png)
+
+9.  開啟 PowerView 之後，在右側的欄位面板中，將 **RoomNumber** 的下拉選單中改為 _Do Not Summarize_。
+
+	![](images/3-power-view-fields.png)
+
+10. 在上面工具列中選擇 **Other Chart** » **Line**，就會將資料畫成折線圖。
+
+	![](images/3-power-view-line-chart.png)
+
+
+11. 在右側的面板將 **DeviceType** 欄位中勾選 _energy_，就可以看到在不同時間、不同房門的能源變化趨勢。
+
+    ![](images/3-line-chart-by-energy.png)
