@@ -4,8 +4,8 @@ Microsoft Azure IoT Suite 的動手操作營的教材及投影片
 
 議程 | 時間 | 教材
 ---- | ---- | ---- 
-Azure 帳號及訂閱設定 | 30 分鐘 | [參考 Azure 食譜](http://book.azure-recipes.tw/chapter01/01_signup.html)
 Azure IoT 服務簡介 | 10 分鐘 | [投影片](Presentation/1. Introduction/Introduction.pptx)
+準備工作 | 30 分鐘 | [操作手冊](HOL/HOL0-Prepare.md)
 Azure Event Hubs 及 Stream Analytics 介紹 | 60 分鐘 | [投影片](Presentation/2. Data Streaming/Data Streaming.pptx) | [操作手冊](HOL/HOL1-EventHubs.md)
 Azure Event Hubs 動手操作 | 30 分鐘 | [操作手冊](HOL/HOL1-EventHubs.md)
 Azure Stream Analytics 動手操作 | 30 分鐘 | [操作手冊](HOL/HOL2-StreamAnalytics.md)
