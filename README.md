@@ -1,6 +1,6 @@
 # Azure IoT 動手操作實驗室
 
-Microsoft Azure IoT Suite 的動手操作營的教材及投影片
+Microsoft Azure IoT Suite 的動手操作營的教材及投影片，問題建議可至 [MSDN 論壇 - Microsoft Azure PaaS 服務](https://social.msdn.microsoft.com/Forums/zh-TW/home?forum=2199) 發問交流。
 
 議程 | 時間 | 教材
 ---- | ---- | ---- 
