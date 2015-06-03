@@ -34,3 +34,11 @@
 # 4. 善用論壇 #
 
 請多多利用 [MSDN 論壇 - Microsoft Azure PaaS 服務](https://social.msdn.microsoft.com/Forums/zh-TW/home?forum=2199) 的論壇來發問及交流。
+
+# 5. 遭遇問題#
+
+當您在建立 Azure 帳號的過程中，遭遇一些問題時，請您參考以下流程，讓微軟客戶支援服務團隊透過電子郵件或電話的方式，進一步協助您排除狀況。
+  1. 登入到 http://support.microsoft.com/oas/?prid=15470&ln=en-us
+  2. 於選單內，選擇符合您遭遇情境的描述。
+  3. 填寫聯絡資訊與問題描述。(可使用中文描述)
+  4. 送出表單後，微軟的客戶支援服務團隊會主動與您聯繫，並協助您排除問題。
